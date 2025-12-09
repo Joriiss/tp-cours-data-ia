@@ -1,6 +1,6 @@
 # Projet Data Science & IA
 
-Ce repo contient trois exercices axés sur la reconnaissance d'images et l'analyse d'images par IA.
+Ce repo contient quatre exercices axés sur la reconnaissance d'images et l'analyse d'images par IA.
 
 ## Structure du Projet
 
@@ -20,6 +20,9 @@ shapes/
 │   ├── main.py         # Détection de contours
 │   ├── cameraman.tif   # Image d'exemple
 │   └── cameraman_contours.png  # Image résultat
+├── tp4/                # Exercice 4 : Colorisation d'Images avec CNN
+│   ├── main.py         # Conversion N&B et colorisation
+│   └── models/         # Fichiers du modèle de colorisation
 └── README.md           # Ce fichier
 ```
 
@@ -178,9 +181,93 @@ Le programme génère une image `cameraman_contours.png` dans le répertoire `tp
 
 ---
 
+## Exercice 4 : Colorisation d'Images avec CNN
+
+**Emplacement :** Répertoire `tp4/`
+
+### Description
+Un programme Python qui convertit une image couleur en niveaux de gris, puis utilise un modèle CNN pré-entraîné pour reconstruire une image couleur réaliste à partir de l'image en noir et blanc.
+
+> **Note :** Les modèles utilisés proviennent de [mariyakhannn/imagecolorizer](https://github.com/mariyakhannn/imagecolorizer).
+
+### Fonctionnalités
+- Conversion d'images couleur en niveaux de gris
+- Colorisation automatique d'images N&B avec un modèle CNN pré-entraîné (Caffe)
+- Utilisation de l'espace colorimétrique LAB pour la colorisation
+- Sauvegarde automatique des résultats
+
+### Prérequis
+- Python 3.7+
+- OpenCV (opencv-python)
+- NumPy
+- Fichiers du modèle de colorisation (voir Configuration)
+
+### Installation
+```bash
+pip install -r requirements.txt
+```
+
+### Configuration
+
+1. Téléchargez les fichiers du modèle depuis [mariyakhannn/imagecolorizer](https://github.com/mariyakhannn/imagecolorizer) :
+   - `colorization_deploy_v2.prototxt`
+   - `pts_in_hull.npy`
+   - `colorization_release_v2.caffemodel` (~300MB)
+
+2. Placez les fichiers dans le répertoire `tp4/models/` :
+```
+tp4/
+├── main.py
+└── models/
+    ├── colorization_deploy_v2.prototxt
+    ├── pts_in_hull.npy
+    └── colorization_release_v2.caffemodel
+```
+
+### Utilisation
+
+**Convertir une image en noir et blanc :**
+```bash
+python tp4/main.py bw image.jpg
+```
+
+**Coloriser une image N&B :**
+```bash
+python tp4/main.py colorize image_bw.jpg
+```
+
+**Avec options :**
+```bash
+# Spécifier un autre répertoire pour les modèles
+python tp4/main.py colorize image_bw.jpg --model-dir ./models
+
+# Afficher les images (originale et colorisée)
+python tp4/main.py colorize image_bw.jpg --display
+
+# Spécifier le fichier de sortie
+python tp4/main.py colorize image_bw.jpg output.jpg
+```
+
+### Comment ça fonctionne
+
+Le programme utilise un modèle CNN pré-entraîné basé sur le framework Caffe :
+
+1. **Conversion en N&B** : L'image couleur est convertie en niveaux de gris
+2. **Prétraitement** : L'image est normalisée et convertie en espace colorimétrique LAB
+3. **Prédiction** : Le modèle CNN prédit les canaux de couleur (a et b) à partir du canal de luminosité (L)
+4. **Reconstruction** : Les canaux prédits sont combinés avec le canal L original pour créer l'image colorisée
+
+### Résultat
+
+Le programme génère :
+- `{nom}_bw.{ext}` : Image convertie en noir et blanc
+- `{nom}_colorized.{ext}` : Image colorisée à partir du N&B
+
+---
+
 ## Installation (Toutes les Dépendances)
 
-Installez tous les packages requis pour les trois exercices :
+Installez tous les packages requis pour les quatre exercices :
 
 ```bash
 pip install -r requirements.txt
@@ -203,10 +290,12 @@ pip install -r requirements.txt
 - Le fichier `.env` doit être ajouté à `.gitignore` pour garder votre clé API sécurisée
 - L'Exercice 1 nécessite des données d'entraînement dans la structure de répertoire `data/`
 - L'Exercice 3 nécessite que le fichier `cameraman.tif` soit présent dans le répertoire `tp3/`
+- L'Exercice 4 nécessite les fichiers du modèle dans le répertoire `tp4/models/` (voir Configuration)
 - Tous les exercices prennent en charge les formats d'image courants (PNG, JPEG, TIFF, etc.)
 
 ## Références
 
 - **Exercice 3** : Basé sur le tutoriel [Détection de contour avec OpenCV et Python](https://www.aranacorp.com/fr/detection-de-contour-avec-opencv-et-python/#google_vignette) par AranaCorp
+- **Exercice 4** : Modèles de colorisation provenant de [mariyakhannn/imagecolorizer](https://github.com/mariyakhannn/imagecolorizer)
 
 ---
