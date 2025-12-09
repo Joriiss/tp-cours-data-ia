@@ -4,3 +4,4 @@ scikit-learn
 google-generativeai
 Pillow
 python-dotenv
+opencv-python

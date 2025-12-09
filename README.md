@@ -1,6 +1,6 @@
 # Projet Data Science & IA
 
-Ce repo contient deux exercices axés sur la reconnaissance d'images et l'analyse d'images par IA.
+Ce repo contient trois exercices axés sur la reconnaissance d'images et l'analyse d'images par IA.
 
 ## Structure du Projet
 
@@ -16,6 +16,10 @@ shapes/
 ├── tp2/                # Exercice 2 : Détection de Chiffres Romains
 │   ├── main.py         # Implémentation Gemini AI
 │   └── data/           # Images d'exemple avec chiffres romains
+├── tp3/                # Exercice 3 : Détection de Contours avec OpenCV
+│   ├── main.py         # Détection de contours
+│   ├── cameraman.tif   # Image d'exemple
+│   └── cameraman_contours.png  # Image résultat
 └── README.md           # Ce fichier
 ```
 
@@ -103,12 +107,80 @@ python tp2/main.py tp2/data/numeral-1.png
 
 Le programme analyse l'image et affiche tous les chiffres romains trouvés.
 
+---
+
+## Exercice 3 : Détection de Contours avec OpenCV
+
+**Emplacement :** Répertoire `tp3/`
+
+### Description
+Un programme Python qui détecte et trace automatiquement les contours des formes principales dans une image en utilisant OpenCV. Ce programme implémente un algorithme de détection de contours basé sur les techniques de traitement d'image classiques.
+
+> **Note :** Ce programme s'est basé sur le tutoriel de [AranaCorp sur la détection de contour avec OpenCV et Python](https://www.aranacorp.com/fr/detection-de-contour-avec-opencv-et-python/#google_vignette).
+
+### Fonctionnalités
+- Conversion automatique en niveaux de gris
+- Réduction du bruit avec flou gaussien
+- Détection des bords avec l'algorithme de Canny
+- Détection et traçage des contours avec `findContours()`
+- Sauvegarde automatique de l'image avec contours
+- Support des images en niveaux de gris et en couleur
+
+### Prérequis
+- Python 3.7+
+- OpenCV (opencv-python)
+- NumPy
+- Matplotlib (optionnel, pour visualisation)
+
+### Installation
+```bash
+pip install -r requirements.txt
+```
+
+### Utilisation
+```bash
+python tp3/main.py
+```
+
+Le programme va :
+1. Charger l'image `cameraman.tif` depuis le répertoire `tp3/`
+2. Redimensionner l'image à 512px de largeur
+3. Convertir l'image en niveaux de gris
+4. Appliquer un flou gaussien pour réduire le bruit
+5. Détecter les bords avec l'algorithme de Canny
+6. Trouver les contours avec `cv2.findContours()`
+7. Dessiner les contours en vert sur l'image originale
+8. Afficher les fenêtres avec les résultats intermédiaires
+9. Sauvegarder l'image avec contours sous `cameraman_contours.png`
+
+### Algorithme de Détection
+
+Le programme suit les étapes suivantes :
+
+1. **Conversion en niveaux de gris** : `cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)`
+2. **Floutage gaussien** : `cv2.GaussianBlur(gray, (5,5), 0)` pour éliminer le bruit
+3. **Détection de bords Canny** : `cv2.Canny(blur, 30, 200)` avec deux seuils d'hystérésis
+4. **Détection de contours** : `cv2.findContours()` avec :
+   - Mode : `cv2.RETR_TREE` (retourne une arborescence complète des contours)
+   - Méthode d'approximation : `cv2.CHAIN_APPROX_SIMPLE` (compresse les segments)
+5. **Dessin des contours** : `cv2.drawContours()` en vert avec une épaisseur de 3 pixels
+
+### Paramètres
+
+- **Taille du flou** : 5x5 pixels (paramètre `blur_kernel_size`)
+- **Seuils Canny** : 30 (seuil bas) et 200 (seuil haut)
+- **Mode de récupération** : `RETR_TREE` (tous les contours avec hiérarchie)
+- **Méthode d'approximation** : `CHAIN_APPROX_SIMPLE` (optimise le nombre de points)
+
+### Résultat
+
+Le programme génère une image `cameraman_contours.png` dans le répertoire `tp3/` avec tous les contours détectés dessinés en vert sur l'image originale.
 
 ---
 
 ## Installation (Toutes les Dépendances)
 
-Installez tous les packages requis pour les deux exercices :
+Installez tous les packages requis pour les trois exercices :
 
 ```bash
 pip install -r requirements.txt
@@ -121,6 +193,7 @@ pip install -r requirements.txt
 - `google-generativeai` - API Gemini AI (Exercice 2)
 - `Pillow` - Traitement d'images
 - `python-dotenv` - Gestion des variables d'environnement (Exercice 2)
+- `opencv-python` - Bibliothèque de vision par ordinateur (Exercice 3)
 
 ---
 
@@ -129,6 +202,11 @@ pip install -r requirements.txt
 - Pour l'Exercice 2, assurez-vous que votre fichier `.env` se trouve dans le répertoire racine du projet
 - Le fichier `.env` doit être ajouté à `.gitignore` pour garder votre clé API sécurisée
 - L'Exercice 1 nécessite des données d'entraînement dans la structure de répertoire `data/`
-- Les deux exercices prennent en charge les formats d'image courants (PNG, JPEG, etc.)
+- L'Exercice 3 nécessite que le fichier `cameraman.tif` soit présent dans le répertoire `tp3/`
+- Tous les exercices prennent en charge les formats d'image courants (PNG, JPEG, TIFF, etc.)
+
+## Références
+
+- **Exercice 3** : Basé sur le tutoriel [Détection de contour avec OpenCV et Python](https://www.aranacorp.com/fr/detection-de-contour-avec-opencv-et-python/#google_vignette) par AranaCorp
 
 ---
