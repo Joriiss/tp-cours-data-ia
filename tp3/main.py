@@ -42,7 +42,7 @@ def main(args):
     ## Open and resize image
     # Get the directory where the script is located
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    image_path = os.path.join(script_dir, 'cameraman.tif')
+    image_path = os.path.join(script_dir, 'fraises.jpg')
     
     base_img = cv2.imread(image_path, cv2.IMREAD_UNCHANGED)
     
