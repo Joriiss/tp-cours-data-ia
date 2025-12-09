@@ -1,3 +1,6 @@
 tensorflow
 numpy
 scikit-learn
+google-generativeai
+Pillow
+python-dotenv
