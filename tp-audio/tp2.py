@@ -159,22 +159,22 @@ def generate_plots(signal_array, sample_freq, output_dir, base_name):
     plt.close()
     print(f"Spectrogramme du canal droit sauvegardé: {plot_path}")
 
-def apply_lowpass_filter(input_file, cutoff_freq=4000.0, output_file=None):
+def apply_lowpass_filter(input_file, cutoff_freq=3000.0, output_file=None):
     """
     Applique un filtre passe-bas à un fichier audio pour réduire le bruit.
     
     Args:
         input_file: Chemin vers le fichier audio bruité
-        cutoff_freq: Fréquence de coupure en Hz (défaut: 4000.0)
+        cutoff_freq: Fréquence de coupure en Hz (défaut: 3000.0)
         output_file: Chemin du fichier de sortie (optionnel)
     
     Returns:
         Chemin du fichier filtré
     """
-    # Créer le dossier noisy s'il n'existe pas
+    # Créer le dossier filtered s'il n'existe pas
     script_dir = os.path.dirname(os.path.abspath(input_file)) if os.path.dirname(input_file) else os.getcwd()
-    noisy_dir = os.path.join(script_dir, 'noisy')
-    os.makedirs(noisy_dir, exist_ok=True)
+    filtered_dir = os.path.join(script_dir, 'filtered')
+    os.makedirs(filtered_dir, exist_ok=True)
     
     # Charger l'audio bruité
     noisy_signal, sample_freq = librosa.load(input_file, sr=None, mono=False)
@@ -209,10 +209,10 @@ def apply_lowpass_filter(input_file, cutoff_freq=4000.0, output_file=None):
         # Enlever "_noisy" du nom si présent
         if base_name.endswith('_noisy'):
             base_name = base_name[:-6]
-        output_file = os.path.join(noisy_dir, f"{base_name}_filtered_lowpass_{int(cutoff_freq)}Hz.wav")
+        output_file = os.path.join(filtered_dir, f"{base_name}_filtered_lowpass_{int(cutoff_freq)}Hz.wav")
     else:
         if not os.path.isabs(output_file):
-            output_file = os.path.join(noisy_dir, output_file)
+            output_file = os.path.join(filtered_dir, output_file)
     
     # Sauvegarder le fichier filtré
     if filtered_signal.ndim == 1:
@@ -227,7 +227,7 @@ def apply_lowpass_filter(input_file, cutoff_freq=4000.0, output_file=None):
     
     # Générer les graphiques pour le signal filtré
     base_name = os.path.splitext(os.path.basename(output_file))[0]
-    generate_plots(filtered_signal, sample_freq, noisy_dir, base_name)
+    generate_plots(filtered_signal, sample_freq, filtered_dir, base_name)
     
     return output_file
 
@@ -242,7 +242,7 @@ def main():
         print("  --std <float>     Déviation standard du bruit (défaut: 0.05)")
         print("  --output <file>   Fichier de sortie (optionnel)")
         print("\nOptions pour filter:")
-        print("  --cutoff <float>  Fréquence de coupure en Hz (défaut: 4000.0)")
+        print("  --cutoff <float>  Fréquence de coupure en Hz (défaut: 3000.0)")
         print("  --output <file>   Fichier de sortie (optionnel)")
         print("\nExemples:")
         print("  python tp2.py add-noise hello.mp3 --std 0.01")
@@ -275,7 +275,7 @@ def main():
         add_noise(input_file, std_noise, output_file)
     
     elif mode == 'filter':
-        cutoff_freq = 4000.0
+        cutoff_freq = 3000.0
         output_file = None
         
         # Parser les arguments
