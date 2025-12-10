@@ -1,6 +1,6 @@
 # Projet Data Science & IA
 
-Ce repo contient quatre exercices axés sur la reconnaissance d'images et l'analyse d'images par IA.
+Ce repo contient cinq exercices axés sur la reconnaissance d'images, l'analyse d'images par IA et le traitement audio.
 
 ## Structure du Projet
 
@@ -23,6 +23,9 @@ shapes/
 ├── tp4/                # Exercice 4 : Colorisation d'Images avec CNN
 │   ├── main.py         # Conversion N&B et colorisation
 │   └── models/         # Fichiers du modèle de colorisation
+├── tp-audio/           # Exercice 5 : Analyse et Traitement Audio
+│   ├── tp1.py          # Analyse audio, visualisation et modification
+│   └── hello.mp3       # Fichier audio d'exemple
 └── README.md           # Ce fichier
 ```
 
@@ -290,6 +293,107 @@ Le programme génère :
 
 ---
 
+## Exercice 5 : Analyse et Traitement Audio
+
+**Emplacement :** Répertoire `tp-audio/`
+
+### Description
+Un programme Python pour analyser, visualiser et traiter des fichiers audio. Le programme permet de charger des fichiers audio (MP3, WAV, etc.), d'afficher des graphiques d'amplitude et des spectrogrammes, et de modifier la vitesse ou supprimer les silences.
+
+> **Note :** Le code pour afficher le spectrogramme et le diagramme d'amplitude s'est basé sur le tutoriel [Visualisation de données audio en Python](https://www.kaggle.com/code/ghazouanihaythem/tmm-visualisation-de-donn-es-audio-en-python#%C3%89tape-3.-Spectre-de-Fr%C3%A9quence-/-Spectrogramme) par ghazouanihaythem sur Kaggle.
+
+### Fonctionnalités
+- Chargement de fichiers audio (MP3, WAV, etc.) avec `librosa`
+- Visualisation de l'amplitude du signal dans le temps (canaux gauche et droit)
+- Génération de spectrogrammes pour analyser les fréquences
+- Modification de la vitesse de l'audio sans changer la hauteur
+- Suppression automatique des silences au début et à la fin
+- Sauvegarde automatique des graphiques en images PNG
+- Support des fichiers mono et stéréo
+
+### Prérequis
+- Python 3.7+
+- librosa (traitement audio)
+- soundfile (sauvegarde audio)
+- matplotlib (visualisation)
+- numpy
+- ffmpeg (requis par librosa pour lire les fichiers MP3)
+
+### Installation
+```bash
+pip install -r requirements.txt
+```
+
+**Note :** Pour lire les fichiers MP3, vous devez également installer `ffmpeg` :
+- **Windows** : Téléchargez depuis https://ffmpeg.org/download.html et ajoutez-le à votre PATH
+- **Linux** : `sudo apt-get install ffmpeg`
+- **macOS** : `brew install ffmpeg`
+
+### Utilisation
+
+**Analyse basique d'un fichier audio :**
+```bash
+python tp-audio/tp1.py hello.mp3
+```
+
+**Modifier la vitesse de l'audio :**
+```bash
+# 2x plus rapide
+python tp-audio/tp1.py hello.mp3 --speed 2.0
+
+# 0.5x (2x plus lent)
+python tp-audio/tp1.py hello.mp3 --speed 0.5
+```
+
+**Supprimer les silences :**
+```bash
+# Avec le seuil par défaut (20 dB)
+python tp-audio/tp1.py hello.mp3 --remove-silence
+
+# Avec un seuil personnalisé (30 dB)
+python tp-audio/tp1.py hello.mp3 --remove-silence 30
+```
+
+**Combiner les options :**
+```bash
+# Supprimer les silences puis modifier la vitesse
+python tp-audio/tp1.py hello.mp3 --remove-silence --speed 1.5
+```
+
+### Résultats générés
+
+Le programme génère automatiquement les fichiers suivants :
+
+- **`canal_gauche.png`** : Graphique d'amplitude du canal gauche en fonction du temps
+- **`canal_droit.png`** : Graphique d'amplitude du canal droit en fonction du temps
+- **`spectrogramme_canal_gauche.png`** : Spectrogramme du canal gauche (fréquence vs temps)
+- **`spectrogramme_canal_droit.png`** : Spectrogramme du canal droit (fréquence vs temps)
+
+Si des modifications sont appliquées (vitesse ou suppression de silence), les fichiers audio modifiés sont également sauvegardés :
+- **`{nom}_speed_{facteur}x.wav`** : Fichier audio avec vitesse modifiée
+- **`{nom}_no_silence.wav`** : Fichier audio sans silences
+
+### Paramètres
+
+- **`--speed <facteur>`** : Modifie la vitesse de l'audio
+  - `1.0` = vitesse normale
+  - `2.0` = 2x plus rapide
+  - `0.5` = 2x plus lent
+
+- **`--remove-silence [seuil]`** : Supprime les silences
+  - Seuil par défaut : 20 dB
+  - Plus le seuil est élevé, plus de silence est conservé
+
+### Comment ça fonctionne
+
+1. **Chargement audio** : `librosa.load()` charge le fichier audio et retourne le signal et la fréquence d'échantillonnage
+2. **Visualisation d'amplitude** : Les graphiques montrent l'amplitude du signal en fonction du temps pour chaque canal
+3. **Spectrogramme** : `plt.specgram()` génère une représentation temps-fréquence montrant l'intensité des différentes fréquences
+4. **Modification de vitesse** : `librosa.effects.time_stretch()` modifie la vitesse sans changer la hauteur (pitch)
+5. **Suppression de silence** : `librosa.effects.trim()` détecte et supprime automatiquement les silences au début et à la fin
+
+---
+
 ## Installation (Toutes les Dépendances)
 
 Installez tous les packages requis pour les quatre exercices :
@@ -306,6 +410,8 @@ pip install -r requirements.txt
 - `Pillow` - Traitement d'images
 - `python-dotenv` - Gestion des variables d'environnement (Exercice 2)
 - `opencv-python` - Bibliothèque de vision par ordinateur (Exercice 3)
+- `librosa` - Traitement et analyse audio (Exercice 5)
+- `soundfile` - Lecture/écriture de fichiers audio (Exercice 5)
 
 ---
 
@@ -322,5 +428,6 @@ pip install -r requirements.txt
 
 - **Exercice 3** : Basé sur le tutoriel [Détection de contour avec OpenCV et Python](https://www.aranacorp.com/fr/detection-de-contour-avec-opencv-et-python/#google_vignette) par AranaCorp
 - **Exercice 4** : Modèles de colorisation provenant de [mariyakhannn/imagecolorizer](https://github.com/mariyakhannn/imagecolorizer)
+- **Exercice 5** : Code de visualisation (spectrogramme et diagramme d'amplitude) basé sur [Visualisation de données audio en Python](https://www.kaggle.com/code/ghazouanihaythem/tmm-visualisation-de-donn-es-audio-en-python#%C3%89tape-3.-Spectre-de-Fr%C3%A9quence-/-Spectrogramme) par ghazouanihaythem sur Kaggle
 
 ---
