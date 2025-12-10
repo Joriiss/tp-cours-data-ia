@@ -5,3 +5,4 @@ google-generativeai
 Pillow
 python-dotenv
 opencv-python
+librosa
